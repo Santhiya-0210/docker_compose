@@ -1,1 +1,28 @@
-version 3.2
+version: '3.9'
+
+services:
+  db:
+    image: mysql:5.9
+    container_name: wordpress_db
+    volume: 
+      -DB_data:var/lib/mysql
+  restart: "Always"
+   environment:
+    db_root_password:
+    db_name:
+    db_username:
+    db_password:
+wordpress:
+    image: wordpress:latest
+    container_name: wordpress_app
+    port: "8080:80"
+    depends_on: db
+  restart: "Always"
+  environment:
+    wordpress_host:
+    wordpress_user:
+    wordpress_db:
+    wordpress_password:
+volume:
+  DB_data:
+    
