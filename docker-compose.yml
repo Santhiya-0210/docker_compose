@@ -2,27 +2,30 @@ version: '3.9'
 
 services:
   db:
-    image: mysql:5.9
+    image: mysql:5.7
     container_name: wordpress_db
-    volume: 
-      -DB_data:var/lib/mysql
-  restart: "Always"
-   environment:
-    db_root_password:
-    db_name:
-    db_username:
-    db_password:
-wordpress:
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpressuser
+      MYSQL_PASSWORD: wordpresspassword
+
+  wordpress:
     image: wordpress:latest
     container_name: wordpress_app
-    port: "8080:80"
-    depends_on: db
-  restart: "Always"
-  environment:
-    wordpress_host:
-    wordpress_user:
-    wordpress_db:
-    wordpress_password:
-volume:
-  DB_data:
-    
+    depends_on:
+      - db
+    ports:
+      - "8080:80"
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpressuser
+      WORDPRESS_DB_PASSWORD: wordpresspassword
+      WORDPRESS_DB_NAME: wordpress
+
+volumes:
+  db_data:
